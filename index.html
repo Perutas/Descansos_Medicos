@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subsidios Falabella - Validación Inteligente</title>
+  <title>Subsidios Falabella - App</title>
   <meta name="theme-color" content="#008F39" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,30 +11,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
-    /* ============================
-       VARIABLES & ESTILOS GENERALES
-       ============================ */
+    /* =========================================
+       ESTILOS (CSS)
+       ========================================= */
     :root {
-      --color-primary: #bed000; /* Verde Lima Falabella */
-      --color-primary-dark: #a2b200;
-      --color-secondary: #004724; /* Verde oscuro */
-      --color-accent: #E10098; 
-      
+      --color-primary: #bed000; /* Verde Lima */
+      --color-secondary: #004724; /* Verde Oscuro */
       --bg-body: #F0F2F5;
       --bg-card: #FFFFFF;
       --text-main: #1F2937;
       --text-muted: #6B7280;
-      --border-color: #E5E7EB;
-
-      --radius-xl: 20px;
-      --radius-lg: 12px;
-      --radius-md: 8px;
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      
+      --radius-lg: 16px;
       --font-family: 'Poppins', sans-serif;
     }
 
@@ -44,8 +34,9 @@
       margin: 0;
       font-family: var(--font-family);
       background-color: var(--bg-body);
+      /* Patrón de puntos sutil */
       background-image: radial-gradient(#bed000 1px, transparent 1px);
-      background-size: 30px 30px;
+      background-size: 24px 24px;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -61,189 +52,193 @@
       width: 100%;
       max-width: 1000px;
       background: var(--bg-card);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
-    .top-bar {
-      height: 6px;
-      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-    }
+    .top-bar { height: 8px; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); }
 
     /* HEADER */
     .app-header {
       padding: 24px 32px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid #E5E7EB;
       display: flex;
-      justify-content: space-between;
+      gap: 15px;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .header-content h1 {
-      margin: 0;
-      font-size: 1.4rem;
-      color: var(--color-secondary);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      background: white;
     }
 
     .logo-f {
       background: var(--color-secondary);
       color: var(--color-primary);
-      width: 32px;
-      height: 32px;
+      width: 40px; height: 40px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.2rem;
+      flex-shrink: 0;
     }
 
+    .header-content h1 {
+      margin: 0; font-size: 1.25rem; color: var(--color-secondary); line-height: 1.2;
+    }
     .header-content p {
-      margin: 4px 0 0 0;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted);
     }
 
-    /* BODY GRID */
+    /* GRID PRINCIPAL */
     .app-body {
       padding: 30px;
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 30px;
     }
+    @media (max-width: 850px) { .app-body { grid-template-columns: 1fr; padding: 20px; } }
 
-    @media (max-width: 850px) { .app-body { grid-template-columns: 1fr; } }
-
-    /* FORM COMPONENTS */
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    /* ELEMENTOS DE FORMULARIO */
+    .section-title { font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    
     select {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      font-family: inherit;
-      margin-bottom: 25px;
-      cursor: pointer;
+      width: 100%; padding: 14px;
+      border: 2px solid #E5E7EB; border-radius: 12px;
+      font-size: 0.95rem; cursor: pointer; margin-bottom: 25px;
+      background-color: white; transition: border 0.2s;
     }
+    select:focus { outline: none; border-color: var(--color-secondary); }
 
-    /* UPLOAD CARDS */
+    /* GRILLA DE DOCUMENTOS */
     .zones-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 16px;
     }
 
+    /* TARJETA DE SUBIDA */
     .upload-card {
       background: white;
       border: 2px dashed #D1D5DB;
-      border-radius: var(--radius-lg);
+      border-radius: 16px;
       overflow: hidden;
       transition: all 0.2s;
-      animation: fadeInUp 0.4s ease backwards;
+      position: relative;
+      animation: fadeIn 0.4s ease;
     }
-
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .upload-card:hover { border-color: var(--color-secondary); background: #F9FAFB; }
     .upload-card.completed { border-style: solid; border-color: var(--color-secondary); }
 
     .upload-area {
-      height: 140px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      padding: 10px;
-      text-align: center;
+      height: 150px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; padding: 10px; text-align: center;
     }
-
-    .upload-icon { width: 32px; height: 32px; color: #9CA3AF; margin-bottom: 8px; }
-    .upload-label { font-size: 0.8rem; font-weight: 600; }
-    .upload-sub { font-size: 0.7rem; color: var(--text-muted); }
 
     .card-footer-info {
-      background: #F9FAFB;
-      padding: 8px 12px;
+      background: #F9FAFB; padding: 10px 14px;
       border-top: 1px solid #F3F4F6;
     }
-    .doc-name { font-size: 0.75rem; font-weight: 700; color: var(--color-secondary); display: block; }
-    .doc-desc { font-size: 0.65rem; color: var(--text-muted); display: block; }
+    .doc-name { font-size: 0.8rem; font-weight: 700; color: var(--color-secondary); display: block; }
+    .doc-desc { font-size: 0.7rem; color: var(--text-muted); }
 
-    /* PREVIEW & OVERLAYS */
+    /* PREVIEW DE IMAGEN Y BADGES */
     .preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
     
     .success-badge {
-      position: absolute; top: 8px; right: 8px;
+      position: absolute; top: 10px; right: 10px;
       background: white; border-radius: 50%;
-      width: 20px; height: 20px;
+      width: 24px; height: 24px;
       display: flex; align-items: center; justify-content: center;
       color: var(--color-secondary);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       z-index: 2;
     }
 
     .edit-overlay {
       position: absolute; inset: 0;
-      background: rgba(0, 71, 36, 0.8);
+      background: rgba(0, 71, 36, 0.85);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; color: white; font-weight: 600; font-size: 0.85rem;
-      transition: opacity 0.2s; z-index: 3;
+      opacity: 0; color: white; font-weight: 600; font-size: 0.9rem;
+      transition: opacity 0.2s; z-index: 3; cursor: pointer;
+      backdrop-filter: blur(2px);
     }
     .upload-card.completed:hover .edit-overlay { opacity: 1; }
 
     /* SIDEBAR */
     .sidebar-card {
       background: #F9FAFB;
-      padding: 20px;
-      border-radius: var(--radius-lg);
+      padding: 24px;
+      border-radius: 20px;
       position: sticky; top: 20px;
     }
-
-    .info-list { padding: 0; list-style: none; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; }
-    .info-list li { margin-bottom: 8px; padding-left: 18px; position: relative; }
-    .info-list li::before { content: "•"; color: var(--color-secondary); position: absolute; left: 0; font-weight: bold; }
 
     .btn-primary {
       width: 100%;
       background: var(--color-secondary);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 50px;
-      font-weight: 600;
+      color: white; border: none;
+      padding: 16px; border-radius: 50px;
+      font-weight: 600; font-size: 1rem;
       cursor: pointer;
-      display: flex; justify-content: center; align-items: center; gap: 8px;
-      box-shadow: 0 4px 10px rgba(0, 71, 36, 0.3);
-      transition: transform 0.1s;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+      transition: transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 71, 36, 0.2);
     }
-    .btn-primary:disabled { background: #D1D5DB; box-shadow: none; cursor: not-allowed; }
-    .btn-primary:not(:disabled):active { transform: scale(0.98); }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 71, 36, 0.3); }
+    .btn-primary:disabled { background: #D1D5DB; cursor: not-allowed; box-shadow: none; }
 
-    /* LOADER (Spinner) */
+    /* =========================================
+       MODAL (POP UP)
+       ========================================= */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: all 0.3s;
+      backdrop-filter: blur(5px);
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+
+    .modal-content {
+      background: white;
+      width: 90%; max-width: 340px;
+      border-radius: 24px; padding: 30px;
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 24px; }
+
+    .modal-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+    .option-btn {
+      background: #F3F4F6;
+      border: 2px solid transparent;
+      border-radius: 16px; padding: 24px 12px;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .option-btn:hover { background: #E5E7EB; transform: translateY(-3px); }
+    .option-btn svg { width: 36px; height: 36px; color: var(--color-secondary); }
+    .option-btn span { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
+
+    .cancel-btn {
+      background: none; border: none; color: #9CA3AF;
+      font-size: 0.9rem; cursor: pointer; padding: 8px; width: 100%;
+    }
+    .cancel-btn:hover { color: var(--text-main); }
+
+    /* LOADER ANIMADO */
     .loader {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(0,0,0,0.1);
-      border-top-color: currentColor;
+      width: 24px; height: 24px;
+      border: 3px solid rgba(0,0,0,0.1);
+      border-top-color: var(--color-primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -257,88 +252,154 @@
     <div class="top-bar"></div>
     
     <header class="app-header">
+      <div class="logo-f">F</div>
       <div class="header-content">
-        <h1><div class="logo-f">F</div> Subsidios por Descanso Médico</h1>
-        <p>Validador inteligente de documentos y generador de PDF.</p>
+        <h1>Subsidios por Descanso Médico</h1>
+        <p>Validador inteligente & Generador PDF</p>
       </div>
     </header>
 
     <main class="app-body">
       <section>
-        <div class="section-title">1. Selecciona el tipo de operación</div>
+        <div class="section-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+          1. Selecciona tipo de operación
+        </div>
+        
         <select id="operation-select">
-          <option value="">Seleccione una opción...</option>
+          <option value="">-- Seleccione una opción --</option>
           <option value="1">Subsidios clínica privada</option>
           <option value="2">Subsidios hospital público</option>
           <option value="3">Clínica privada (+15 días)</option>
         </select>
 
         <div id="dynamic-content" style="display: none;">
-          <div class="section-title">2. Documentos Requeridos</div>
-          <div class="zones-grid" id="zones-container"></div>
+          <div class="section-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            2. Documentos Requeridos
+          </div>
+          <div class="zones-grid" id="zones-container">
+            </div>
         </div>
         
-        <div id="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted); background: #F9FAFB; border-radius: 12px;">
-          Selecciona una operación para comenzar.
+        <div id="empty-state" style="text-align: center; padding: 60px 20px; color: #9CA3AF; background: #F9FAFB; border-radius: 16px; border: 1px dashed #E5E7EB;">
+          <p>Selecciona una operación arriba para comenzar.</p>
         </div>
       </section>
 
       <aside>
         <div class="sidebar-card">
           <div class="section-title">Instrucciones</div>
-          <ul class="info-list">
-            <li>Sube fotos claras de cada documento.</li>
-            <li><strong>El sistema validará automáticamente</strong> si la imagen contiene texto legible.</li>
-            <li>Si la foto es borrosa, será rechazada.</li>
-            <li>Al terminar, genera el PDF.</li>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 24px;">
+            <li>Usa la <strong>Cámara</strong> para fotos nuevas o <strong>Archivos</strong> para documentos escaneados.</li>
+            <li>El sistema buscará palabras como <em>"Médico", "Diagnóstico", "Hospital"</em>.</li>
+            <li>Si la imagen es borrosa, será rechazada automáticamente.</li>
           </ul>
 
           <button id="generate-btn" class="btn-primary" disabled>
-            <span>Generar PDF</span>
+            <span>Generar PDF Combinado</span>
           </button>
         </div>
       </aside>
     </main>
   </div>
 
-  <input type="file" id="hidden-file-input" accept="image/*" capture="environment" style="display:none" />
+  <div class="modal-overlay" id="selection-modal">
+    <div class="modal-content">
+      <div class="modal-title">¿Cómo quieres subir el documento?</div>
+      
+      <div class="modal-options">
+        <button class="option-btn" onclick="triggerCamera()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span>Usar Cámara</span>
+        </button>
+
+        <button class="option-btn" onclick="triggerFiles()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+          <span>Mis Archivos</span>
+        </button>
+      </div>
+
+      <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none" />
+  <input type="file" id="input-files" accept="image/*" style="display:none" />
 
   <script>
-    // --- REFERENCIAS DOM ---
+    /* =========================================
+       1. CONFIGURACIÓN Y REFERENCIAS
+       ========================================= */
     const operationSelect = document.getElementById("operation-select");
     const zonesContainer = document.getElementById("zones-container");
     const generateBtn = document.getElementById("generate-btn");
-    const hiddenFileInput = document.getElementById("hidden-file-input");
     const dynamicContent = document.getElementById("dynamic-content");
     const emptyState = document.getElementById("empty-state");
+    
+    // Modal & Inputs
+    const modal = document.getElementById("selection-modal");
+    const inputCamera = document.getElementById("input-camera");
+    const inputFiles = document.getElementById("input-files");
 
-    // --- CONFIGURACIÓN DE OPERACIONES ---
+    let currentUploadIndex = null;
+
+    /* =========================================
+       2. DICCIONARIO DE VALIDACIÓN (KEYWORDS)
+       ========================================= */
+    // Palabras que el OCR buscará para confirmar que es un doc médico
+    const PALABRAS_CLAVE_MEDICAS = [
+      "certificado", "medico", "médico", "salud", "descanso", "paciente", 
+      "diagnostico", "diagnóstico", "tratamiento", "fecha", "dias", "días",
+      "cmp", "c.m.p", "colegio", "hospital", "clinica", "clínica", 
+      "seguro", "essalud", "minsa", "firma", "sello", "atencion", "receta",
+      "incapacidad", "contingencia", "inicio", "fin", "periodo"
+    ];
+
+    /* =========================================
+       3. LÓGICA DE NEGOCIO (OPERACIONES)
+       ========================================= */
     const OPERATIONS = {
-      "1": {
-        label: "Subsidios_clinica_privada",
-        documents: [{ name: "Certificado Médico", subtitle: "Emitido por clínica privada." }]
-      },
-      "2": {
-        label: "Subsidios_hospital_publico",
-        documents: [
-          { name: "Certificado Médico", subtitle: "Emitido por hospital público." },
-          { name: "Comprobante", subtitle: "De atención o pago relacionado." }
-        ]
-      },
-      "3": {
-        label: "Clinica_privada_+15_dias",
-        documents: [
-          { name: "Certificado Médico", subtitle: "De la clínica privada." },
-          { name: "Informe Médico", subtitle: "Detalle de condición y tratamiento." },
-          { name: "Descanso Prolongado", subtitle: "Acredita +15 días." }
-        ]
-      }
+      "1": { label: "Subsidios_clinica_privada", documents: [{ name: "Certificado Médico", subtitle: "Emitido por clínica privada" }] },
+      "2": { label: "Subsidios_hospital_publico", documents: [{ name: "Certificado Médico", subtitle: "Hospital público" }, { name: "Comprobante", subtitle: "Atención o pago" }] },
+      "3": { label: "Clinica_privada_+15_dias", documents: [{ name: "Certificado Médico", subtitle: "Clínica privada" }, { name: "Informe Médico", subtitle: "Detallado" }, { name: "Descanso Prolongado", subtitle: "+15 días" }] }
     };
 
     let currentOperation = null;
-    let images = []; 
+    let images = [];
 
-    // --- EVENT LISTENER: SELECT ---
+    // --- FUNCIONES DEL MODAL ---
+    function openModal(index) { currentUploadIndex = index; modal.classList.add("active"); }
+    function closeModal() { modal.classList.remove("active"); currentUploadIndex = null; }
+    
+    // Cerrar al hacer clic fuera del modal
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    // Activadores de Inputs
+    function triggerCamera() {
+      if (currentUploadIndex === null) return;
+      inputCamera.value = ""; inputCamera.click();
+      modal.classList.remove("active");
+    }
+
+    function triggerFiles() {
+      if (currentUploadIndex === null) return;
+      inputFiles.value = ""; inputFiles.click();
+      modal.classList.remove("active");
+    }
+
+    // --- EVENT LISTENERS PARA SUBIDA DE ARCHIVOS ---
+    inputCamera.addEventListener("change", (ev) => processFileSelection(ev));
+    inputFiles.addEventListener("change", (ev) => processFileSelection(ev));
+
+    function processFileSelection(ev) {
+      const file = ev.target.files[0];
+      if (file && file.type.startsWith("image/") && currentUploadIndex !== null) {
+        handleImageFile(file, currentUploadIndex);
+      }
+    }
+
+    // --- GENERACIÓN DE LA INTERFAZ ---
     operationSelect.addEventListener("change", () => {
       const value = operationSelect.value;
       currentOperation = OPERATIONS[value] || null;
@@ -355,103 +416,108 @@
       emptyState.style.display = "none";
       dynamicContent.style.display = "block";
 
-      // Generar tarjetas
+      // Crear tarjetas dinámicamente
       currentOperation.documents.forEach((doc, index) => {
         const card = document.createElement("div");
         card.className = "upload-card";
         card.dataset.index = index;
-        card.style.animationDelay = `${index * 0.1}s`;
-
-        // Estructura HTML de la tarjeta
         card.innerHTML = `
           <div class="upload-area">
-            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <span class="upload-label">Subir foto</span>
-            <span class="upload-sub">Clic para capturar</span>
+            <svg style="width:36px; height:36px; color:#D1D5DB; margin-bottom:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span style="font-size:0.85rem; font-weight:600; color:#4B5563;">Subir Documento</span>
           </div>
           <div class="card-footer-info">
             <span class="doc-name">${index + 1}. ${doc.name}</span>
             <span class="doc-desc">${doc.subtitle}</span>
           </div>
         `;
-
         zonesContainer.appendChild(card);
-
-        // Click event para subir archivo
-        const uploadArea = card.querySelector(".upload-area");
-        uploadArea.addEventListener("click", () => {
-          hiddenFileInput.value = "";
-          hiddenFileInput.dataset.targetIndex = index;
-          hiddenFileInput.click();
-        });
+        
+        // Al hacer click, abrir MODAL
+        card.querySelector(".upload-area").addEventListener("click", () => openModal(index));
       });
-
       updateGenerateButtonState();
     });
 
-    // --- EVENT LISTENER: INPUT FILE ---
-    hiddenFileInput.addEventListener("change", (ev) => {
-      const file = ev.target.files[0];
-      const index = parseInt(hiddenFileInput.dataset.targetIndex, 10);
-      if (file && file.type.startsWith("image/")) {
-        handleImageFile(file, index);
-      }
-    });
-
-    // --- LÓGICA DE VALIDACIÓN (TESSERACT OCR) ---
+    /* =========================================
+       4. VALIDACIÓN ROBUSTA (OCR + KEYWORDS)
+       ========================================= */
     async function validarDocumento(file, cardElement) {
       const uploadArea = cardElement.querySelector(".upload-area");
       const originalContent = uploadArea.innerHTML;
 
-      // 1. UI: Mostrar Loader
+      // Mostrar Loader
       uploadArea.innerHTML = `
-        <div class="loader" style="color:#bed000; border-color: #004724;"></div>
-        <span style="font-size:0.75rem; margin-top:8px; color:#6B7280; font-weight:500;">Validando...</span>
+        <div class="loader"></div>
+        <div style="display:flex; flex-direction:column; gap:2px; margin-top:10px;">
+          <span style="font-size:0.8rem; color:#1F2937; font-weight:600;">Analizando...</span>
+          <span style="font-size:0.7rem; color:#6B7280;">Leyendo texto</span>
+        </div>
       `;
 
       try {
-        // 2. OCR: Analizar imagen (usa 'spa' para español)
-        // Nota: La primera vez descargará datos del idioma, puede tardar un poco.
-        const result = await Tesseract.recognize(
-          file, 
-          'spa', 
-          // { logger: m => console.log(m) } // Descomentar para debug en consola
-        );
-
-        const textoDetectado = result.data.text.trim();
+        // Ejecutar Tesseract OCR
+        const result = await Tesseract.recognize(file, 'spa');
+        
+        const textoCompleto = result.data.text.toLowerCase();
         const confianza = result.data.confidence;
+        const longitud = textoCompleto.length;
 
-        console.log("OCR Texto:", textoDetectado.length, "caracteres");
-        console.log("OCR Confianza:", confianza);
+        // Búsqueda de palabras clave
+        let palabrasEncontradas = [];
+        PALABRAS_CLAVE_MEDICAS.forEach(palabra => {
+          if (textoCompleto.includes(palabra)) palabrasEncontradas.push(palabra);
+        });
 
-        // 3. REGLA DE NEGOCIO
-        // Si tiene muy poco texto (<15 caracteres) probablemente no sea un documento válido
-        if (textoDetectado.length > 15) {
-          return true; // Pasa la prueba
+        console.log(`OCR -> Confianza: ${confianza}, Largo: ${longitud}, Keywords: ${palabrasEncontradas.length}`);
+
+        // REGLAS DE DECISIÓN
+        let esValido = false;
+        let mensajeError = "";
+
+        // Regla A: Encontramos al menos 2 palabras clave (Certificado, Médico, etc.)
+        if (palabrasEncontradas.length >= 2) {
+          esValido = true;
+        } 
+        // Regla B: No hay palabras clave, pero hay MUCHO texto legible (Fallback)
+        else if (longitud > 100 && confianza > 60) {
+          esValido = true;
+        }
+        // Regla C: Rechazo
+        else {
+          esValido = false;
+          if (confianza < 50) {
+            mensajeError = "La imagen está muy borrosa, oscura o desenfocada.";
+          } else if (longitud < 20) {
+            mensajeError = "No se detectó texto en la imagen.";
+          } else {
+            mensajeError = "No parece ser un documento médico válido (Faltan palabras clave como 'Médico', 'Diagnóstico', etc).";
+          }
+        }
+
+        if (esValido) {
+          return true;
         } else {
-          alert("⚠️ No detectamos texto legible en la imagen.\n\nPor favor, asegúrate de que sea un documento y que la foto no esté borrosa.");
-          uploadArea.innerHTML = originalContent; // Restaurar estado inicial
+          alert(`⚠️ Documento rechazado\n\n${mensajeError}\nIntenta tomar la foto nuevamente con mejor luz.`);
+          uploadArea.innerHTML = originalContent; // Restaurar
           return false;
         }
 
       } catch (error) {
-        console.error("Error OCR:", error);
-        alert("Ocurrió un error al procesar la imagen. Inténtalo de nuevo.");
+        console.error(error);
+        alert("Ocurrió un error técnico al leer la imagen. Intenta de nuevo.");
         uploadArea.innerHTML = originalContent;
         return false;
       }
     }
 
-    // --- MANEJO DE IMAGEN ---
     async function handleImageFile(file, index) {
       const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
       if (!card) return;
 
-      // Paso 1: Validar
       const esValido = await validarDocumento(file, card);
 
       if (esValido) {
-        // Paso 2: Si es válido, mostrar preview
         const reader = new FileReader();
         reader.onload = (event) => {
           const dataUrl = event.target.result;
@@ -466,83 +532,73 @@
     function updateCardVisuals(index, dataUrl) {
       const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
       const uploadArea = card.querySelector(".upload-area");
-      
-      uploadArea.innerHTML = ""; // Limpiar loader o icono
+      uploadArea.innerHTML = ""; 
 
-      // Crear elementos visuales
       const img = document.createElement("img");
       img.src = dataUrl;
       img.className = "preview-img";
 
       const badge = document.createElement("div");
       badge.className = "success-badge";
-      badge.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>`;
+      badge.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>`;
 
       const editOverlay = document.createElement("div");
       editOverlay.className = "edit-overlay";
-      editOverlay.textContent = "Cambiar foto";
+      editOverlay.innerHTML = `<span>Cambiar Foto</span>`;
       
-      // Permitir cambiar foto al hacer click de nuevo
+      // Al hacer click en "Cambiar", reabrir modal
       editOverlay.addEventListener("click", (e) => {
         e.stopPropagation();
-        hiddenFileInput.value = "";
-        hiddenFileInput.dataset.targetIndex = index;
-        hiddenFileInput.click();
+        openModal(index);
       });
 
       uploadArea.appendChild(img);
       uploadArea.appendChild(badge);
       uploadArea.appendChild(editOverlay);
-      
       card.classList.add("completed");
     }
 
     function updateGenerateButtonState() {
-      if (!currentOperation) {
-        generateBtn.disabled = true;
-        return;
-      }
+      if (!currentOperation) { generateBtn.disabled = true; return; }
       const totalDocs = currentOperation.documents.length;
-      // Verificar que tengamos todas las imagenes
+      // Verificar que el array tenga elementos en todos los índices necesarios
       const allComplete = images.length === totalDocs && images.every(img => img && img.dataUrl);
       generateBtn.disabled = !allComplete;
     }
 
-    // --- GENERAR PDF ---
+    /* =========================================
+       5. GENERACIÓN PDF
+       ========================================= */
     function loadImage(dataUrl) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = dataUrl;
-      });
+      return new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = dataUrl; });
     }
 
     generateBtn.addEventListener("click", async () => {
       try {
         generateBtn.disabled = true;
         const originalText = generateBtn.innerHTML;
-        generateBtn.innerHTML = `<div class="loader" style="width:14px; height:14px; border-color:white; border-top-color:transparent;"></div><span> Procesando...</span>`;
+        generateBtn.innerHTML = `<div class="loader" style="width:16px; height:16px; border-color:white; border-top-color:transparent; display:inline-block; margin-right:8px;"></div> Generando...`;
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-        
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 10;
+        const margin = 15;
         let yPosition = margin;
 
         const orderedImages = [...images].sort((a, b) => a.index - b.index);
 
-        for (const item of orderedImages) {
+        for (let i = 0; i < orderedImages.length; i++) {
+          const item = orderedImages[i];
           const imgEl = await loadImage(item.dataUrl);
+          
           const availableWidth = pageWidth - (2 * margin);
           const ratio = imgEl.height / imgEl.width;
           let imgHeight = availableWidth * ratio;
           
-          // Ajuste simple si la imagen es muy alta para una pagina
-          if (imgHeight > (pageHeight - 20)) {
-             imgHeight = pageHeight - 40; 
+          // Si la imagen es más alta que la página, ajustarla
+          if (imgHeight > (pageHeight - (margin * 2))) {
+             imgHeight = pageHeight - (margin * 2);
           }
 
           if (yPosition + imgHeight > pageHeight - margin) {
@@ -555,11 +611,14 @@
         }
 
         doc.save(`Subsidios_${currentOperation.label}.pdf`);
-        generateBtn.innerHTML = originalText;
         
+        // Reset botón
+        generateBtn.innerHTML = originalText;
+        generateBtn.disabled = false;
+
       } catch (err) {
         console.error(err);
-        alert("Error al generar el PDF.");
+        alert("Error al generar PDF. Intenta nuevamente.");
         updateGenerateButtonState();
       }
     });
