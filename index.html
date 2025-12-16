@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Herramienta falabella Descansos Medicos</title>
+  <title>Herramienta Unificadora Falabella</title>
   <meta name="theme-color" content="#008F39" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
     /* =========================================
@@ -20,7 +19,7 @@
     :root {
       --color-primary: #bed000;
       --color-secondary: #004724;
-      --color-hospital: #0070f3; /* Azul para diferenciar hospitalización */
+      --color-hospital: #0070f3;
       --bg-hospital: #f0f9ff;
       --bg-body: #F0F2F5;
       --bg-card: #FFFFFF;
@@ -48,9 +47,23 @@
     .top-bar { height: 8px; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); }
 
     .app-header { padding: 24px 32px; border-bottom: 1px solid #E5E7EB; display: flex; gap: 15px; align-items: center; background: white; }
-    .logo-f { background: var(--color-secondary); color: var(--color-primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; flex-shrink: 0; }
-    .header-content h1 { margin: 0; font-size: 1.25rem; color: var(--color-secondary); line-height: 1.2; }
-    .header-content p { margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted); }
+    
+    .logo-f { 
+      background: var(--color-secondary); color: var(--color-primary); 
+      width: 40px; height: 40px; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; 
+      font-weight: 800; font-size: 1.2rem; flex-shrink: 0; 
+    }
+    
+    .header-content h1 { 
+      margin: 0; font-size: 1.2rem; color: var(--color-secondary); line-height: 1.2; 
+    }
+    
+    .header-content p { 
+      margin: 6px 0 0 0; font-size: 0.85rem; 
+      color: #ef4444; /* Rojo claro */
+      font-weight: 600;
+    }
 
     .app-body { padding: 30px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
     @media (max-width: 850px) { .app-body { grid-template-columns: 1fr; padding: 20px; } }
@@ -60,10 +73,15 @@
     select {
       width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 12px;
       font-size: 0.95rem; cursor: pointer; margin-bottom: 15px; background-color: white;
+      transition: all 0.2s;
     }
     select:focus { outline: none; border-color: var(--color-secondary); }
 
-    /* TOGGLE SWITCH STYLE (Personalizado con color azul para hospital) */
+    .sub-selection-container {
+      background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
     .toggle-container {
       display: flex; align-items: center; gap: 12px; margin-bottom: 25px;
       background: var(--bg-hospital); padding: 12px 16px; border-radius: 12px; border: 1px solid #bfdbfe;
@@ -74,33 +92,25 @@
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     
-    /* Color activo del toggle (Azul Hospital) */
     input:checked + .slider { background-color: var(--color-hospital); }
     input:checked + .slider:before { transform: translateX(20px); }
     
     .toggle-label { font-size: 0.9rem; font-weight: 600; color: #1e3a8a; }
 
-    /* GRID & CARDS */
     .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
     .upload-card {
       background: white; border: 2px dashed #D1D5DB; border-radius: 16px;
       overflow: hidden; transition: all 0.2s; position: relative; animation: fadeIn 0.4s ease;
     }
+    .upload-card.hospital-card { background-color: #f8fbff; border-color: #93c5fd; }
+    .upload-card.hospital-card:hover { border-color: var(--color-hospital); }
+    .upload-card.hospital-card .upload-area svg { color: var(--color-hospital) !important; }
     
-    /* Estilo especial para tarjetas de HOSPITALIZACIÓN */
-    .upload-card.hospital-card {
-      background-color: #f8fbff;
-      border-color: #93c5fd; /* Borde azul claro */
-    }
-    .upload-card.hospital-card:hover {
-      border-color: var(--color-hospital);
-    }
-    .upload-card.hospital-card .upload-area svg {
-      color: var(--color-hospital) !important;
-    }
+    .upload-card.optional-card { border-style: dashed; border-color: #9CA3AF; background-color: #fafafa; }
+    .upload-card.optional-card .doc-name::after { content: " (Opcional)"; font-weight: 400; font-size: 0.7rem; color: #6B7280; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     .upload-card:hover { border-color: var(--color-secondary); background: #F9FAFB; }
     .upload-card.completed { border-style: solid; border-color: var(--color-secondary); background: white; }
 
@@ -120,7 +130,7 @@
     .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 71, 36, 0.3); }
     .btn-primary:disabled { background: #D1D5DB; cursor: not-allowed; box-shadow: none; }
 
-    /* MODAL */
+    /* MODAL DE SELECCIÓN DE ARCHIVOS */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(5px); }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal-content { background: white; width: 90%; max-width: 340px; border-radius: 24px; padding: 30px; transform: translateY(20px); transition: transform 0.3s; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
@@ -131,6 +141,19 @@
     .option-btn:hover { background: #E5E7EB; transform: translateY(-3px); }
     .cancel-btn { background: none; border: none; color: #9CA3AF; font-size: 0.9rem; cursor: pointer; padding: 8px; width: 100%; }
     
+    /* MODAL DE AVISO PDF */
+    #pdf-notice-modal .modal-content { max-width: 450px; }
+    #pdf-notice-modal .modal-content h3 { font-size: 1.25rem; color: #d32f2f; margin-top: 0; margin-bottom: 15px; }
+    #pdf-notice-modal .modal-content p { font-size: 0.95rem; color: var(--text-main); text-align: left; line-height: 1.5; margin-bottom: 10px; }
+    
+    #pdf-notice-modal .modal-content .action-btn { 
+      background: linear-gradient(135deg, var(--color-primary), #a2b200); 
+      color: #111827; font-weight: 700; padding: 14px 20px; border: none; border-radius: 12px; 
+      cursor: pointer; margin-top: 15px; width: 100%; font-size: 0.95rem;
+      box-shadow: 0 4px 10px rgba(162, 178, 0, 0.3); transition: transform 0.1s;
+    }
+    #pdf-notice-modal .modal-content .action-btn:active { transform: scale(0.98); }
+
     .loader { width: 24px; height: 24px; border: 3px solid rgba(0,0,0,0.1); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -143,43 +166,54 @@
     <header class="app-header">
       <div class="logo-f">F</div>
       <div class="header-content">
-        <h1>Subsidios por Descanso Médico</h1>
-        <p>Validador inteligente & Generador PDF</p>
+        <h1>Herramienta para unificar documentos de descanso médico</h1>
+        <p>Une y Genera PDF de documentos para luego ser subidos a MiFalabella</p>
       </div>
     </header>
 
     <main class="app-body">
       <section>
-        <div class="section-title">
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-          1. Selecciona tipo de operación
-        </div>
         
-        <select id="operation-select">
-          <option value="">-- Seleccione una opción --</option>
-          <option value="1">Enfermedad Común</option>
-          <option value="2">Accidente de Trabajo</option>
-          <option value="3">Maternidad</option>
+        <div class="section-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          1. Tipo de Trámite
+        </div>
+        <select id="main-type-select">
+          <option value="">-- Selecciona el trámite --</option>
+          <option value="simple">Descanso Médico</option>
+          <option value="complex">Subsidio mayor a 20 días en el año</option>
         </select>
+
+        <div id="sub-selection-wrapper" class="sub-selection-container" style="display: none;">
+          <div class="section-title" style="font-size:0.9rem; margin-bottom:10px;">
+            Especifica el tipo de subsidio:
+          </div>
+          <select id="subsidio-select">
+            <option value="">-- Selecciona una opción --</option>
+            <option value="1">Enfermedad Común</option>
+            <option value="2">Accidente de Trabajo</option>
+            <option value="3">Maternidad</option>
+          </select>
+        </div>
 
         <div id="hospital-section" class="toggle-container" style="display: none;">
           <label class="switch">
             <input type="checkbox" id="hospital-toggle">
             <span class="slider round"></span>
           </label>
-          <span class="toggle-label">¿Paciente hospitalizado? (Agregar docs)</span>
+          <span class="toggle-label">¿Requirió hospitalización y cirugía?</span>
         </div>
 
         <div id="dynamic-content" style="display: none;">
           <div class="section-title">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            2. Documentos Requeridos
+            2. Cargar Documentos
           </div>
           <div class="zones-grid" id="zones-container"></div>
         </div>
         
         <div id="empty-state" style="text-align: center; padding: 60px 20px; color: #9CA3AF; background: #F9FAFB; border-radius: 16px; border: 1px dashed #E5E7EB;">
-          <p>Selecciona una operación arriba para comenzar.</p>
+          <p>Selecciona el tipo de trámite arriba.</p>
         </div>
       </section>
 
@@ -187,13 +221,13 @@
         <div class="sidebar-card">
           <div class="section-title">Instrucciones</div>
           <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 24px;">
-            <li>Si hubo internamiento, activa el botón <strong>"Hospitalizado"</strong> (azul).</li>
-            <li>Las tarjetas azules indican documentos de hospitalización.</li>
-            <li>El sistema valida que la foto sea un documento legible.</li>
+            <li><strong>Descanso Médico:</strong> Subir todos los documentos que quieras unificar.</li>
+            <li><strong>Subsidios (>20 días):</strong> Debes subir <strong>TODOS</strong> los documentos obligatorios.</li>
+            <li>El botón se activará cuando completes lo requerido.</li>
           </ul>
 
           <button id="generate-btn" class="btn-primary" disabled>
-            <span>Generar PDF Combinado</span>
+            <span>Generar PDF</span>
           </button>
         </div>
       </aside>
@@ -213,7 +247,25 @@
           <span>Mis Archivos</span>
         </button>
       </div>
-      <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+      <button class="cancel-btn" onclick="closeModal('selection-modal')">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="pdf-notice-modal">
+    <div class="modal-content">
+      <h3>⚠️ ¡Advertencia! Su trámite aún NO está completo</h3>
+      
+      <p>Este sistema solo genera un PDF con sus imágenes.</p>
+      
+      <p style="padding: 12px; background: #FFFBEA; border-left: 4px solid #FBC02D; margin-top: 15px; margin-bottom: 25px;">
+        <strong>Debe subir el archivo en Mi Falabella para finalizar el proceso.</strong><br>
+        De lo contrario, su solicitud estará incompleta.
+      </p>
+
+      <button class="action-btn" onclick="generateAndDownload()">
+        Entendido, Generar PDF
+      </button>
+      <button class="cancel-btn" onclick="cancelPdfGeneration()">Cancelar</button>
     </div>
   </div>
 
@@ -221,8 +273,10 @@
   <input type="file" id="input-files" accept="image/*" style="display:none" />
 
   <script>
-    // Referencias
-    const operationSelect = document.getElementById("operation-select");
+    // --- REFERENCIAS ---
+    const mainTypeSelect = document.getElementById("main-type-select");
+    const subSelectionWrapper = document.getElementById("sub-selection-wrapper");
+    const subsidioSelect = document.getElementById("subsidio-select");
     const hospitalSection = document.getElementById("hospital-section");
     const hospitalToggle = document.getElementById("hospital-toggle");
     const zonesContainer = document.getElementById("zones-container");
@@ -230,117 +284,142 @@
     const dynamicContent = document.getElementById("dynamic-content");
     const emptyState = document.getElementById("empty-state");
     
-    const modal = document.getElementById("selection-modal");
+    const selectionModal = document.getElementById("selection-modal");
+    const pdfNoticeModal = document.getElementById("pdf-notice-modal");
+    
     const inputCamera = document.getElementById("input-camera");
     const inputFiles = document.getElementById("input-files");
 
+    // --- ESTADO ---
     let currentUploadIndex = null;
-    let currentOperation = null;
+    let currentDocsConfig = [];
+    let currentLabel = "";
     let images = []; 
 
-    // Palabras clave
-    const PALABRAS_CLAVE_MEDICAS = [
-        "certificado", "medico", "médico", "diagnostico", "diagnóstico", "descanso", 
-        "incapacidad", "hospital", "clinica", "clínica", "paciente", "tratamiento",
-        "valorada", "especialista", "sellado", "indicaciones", "receta", "terapias", 
-        "laboratorio", "imágenes", "liquidación", "gastos", "solicitud", "atención", 
-        "ecográfico", "trimestre", "embarazo", "essalud", "epicrisis", "resumen", 
-        "operatorio", "quirúrgico", "firma", "sello", "historia"
+    // --- DATA ---
+    const DOCS_DESCANSO_MEDICO = [
+        { name: "Certificado Médico", subtitle: "Recomendado" },
+        { name: "Receta Médica", subtitle: "Recomendado" },
+        { name: "Pago de Consulta", subtitle: "Voucher o boleta" },
+        { name: "Pago de Medicamentos", subtitle: "Voucher o boleta" },
+        { name: "Documentos Adicionales", subtitle: "Si corresponde (Opcional)", optional: true }
     ];
 
-    // CONFIGURACIÓN DE OPERACIONES ACTUALIZADA CON TUS 4 DOCUMENTOS EXACTOS
-    const OPERATIONS = {
+    const SUBSIDIO_OPERATIONS = {
         "1": { 
             label: "Enfermedad_Comun", 
             allowHospital: true,
             baseDocs: [
-                { name: "Certificado Médico", subtitle: "Especie valorada o formato de clínica, firmado y sellado por médico habilitado y especialista" },
-                { name: "Copia de indicaciones médicas", subtitle: "Receta médica, tratamientos, terapias" },
-                { name: "Resultados de exámenes", subtitle: "Laboratorio y imágenes" },
-                { name: "Pago por consulta / Liquidación", subtitle: "Comprobante de pago por consulta médica o liquidación de gastos" }
+                { name: "Certificado Médico", subtitle: "Especie valorada o formato de clínica" },
+                { name: "Copia de indicaciones médicas", subtitle: "Receta médica, tratamientos" },
+                { name: "Resultados de exámenes", subtitle: "Laboratorio e imágenes" }
             ],
             hospitalDocs: [
-                { name: "Epicrisis", subtitle: "Resumen de la hospitalización" },
-                { name: "Reporte Operatorio", subtitle: "En caso de tratamiento quirúrgico" }
+                { name: "Epicrisis", subtitle: "Resumen de hospitalización" },
+                { name: "Reporte Operatorio", subtitle: "Caso quirúrgico" }
             ]
         },
         "2": { 
             label: "Accidente_Trabajo", 
             allowHospital: true,
             baseDocs: [
-                { name: "Certificado Médico", subtitle: "Firmado y sellado por especialista" },
-                { name: "Indicaciones Médicas", subtitle: "Copia recibida en la fecha de atención" },
-                { name: "Receta y Tratamientos", subtitle: "Receta médica, tratamientos, terapias" },
-                { name: "Solicitud de Atención", subtitle: "A partir de la segunda atención médica" }
+                { name: "Certificado Médico", subtitle: "Firmado por especialista" },
+                { name: "Copia de indicaciones médicas", subtitle: "Receta y tratamientos" },
+                { name: "Solicitud de Atención Médica", subtitle: "A partir de la 2da atención" }
             ],
             hospitalDocs: [
-                { name: "Epicrisis", subtitle: "Resumen de la hospitalización" },
-                { name: "Resultados de Exámenes", subtitle: "De ayuda al diagnóstico que sustenten incapacidad" }
+                { name: "Epicrisis", subtitle: "Resumen de hospitalización" },
+                { name: "Resultados de Exámenes", subtitle: "Sustento de incapacidad" }
             ]
         },
         "3": { 
             label: "Maternidad", 
             allowHospital: false,
             baseDocs: [
-                { name: "Exámenes de Diagnóstico", subtitle: "Resultados que sustenten la incapacidad" },
-                { name: "Informe Ecográfico", subtitle: "Del III Trimestre (28 a 42 semanas)" },
-                { name: "Certificado (Embarazo Prolongado)", subtitle: "Anexo 18 Essalud, si aplica" }
+                { name: "Exámenes de Diagnóstico", subtitle: "Sustento incapacidad" },
+                { name: "Informe Ecográfico", subtitle: "III Trimestre (28-42 semanas)" },
+                { name: "Certificado (Embarazo Prolongado)", subtitle: "Anexo 18 si aplica" }
             ],
             hospitalDocs: []
         }
     };
 
-    // --- Lógica UI ---
-    operationSelect.addEventListener("change", () => {
-        const value = operationSelect.value;
-        currentOperation = OPERATIONS[value] || null;
+    // --- LÓGICA DE TRÁMITE ---
+
+    mainTypeSelect.addEventListener("change", () => {
+        const val = mainTypeSelect.value;
+        resetAll();
+
+        if (val === "simple") {
+            currentDocsConfig = DOCS_DESCANSO_MEDICO.map(d => ({...d, type: 'base'}));
+            currentLabel = "Descanso_Medico";
+            renderZones();
+        } else if (val === "complex") {
+            subSelectionWrapper.style.display = "block";
+            emptyState.style.display = "block";
+            dynamicContent.style.display = "none";
+        }
+    });
+
+    subsidioSelect.addEventListener("change", () => {
+        const val = subsidioSelect.value;
+        const opData = SUBSIDIO_OPERATIONS[val];
         images = [];
-        hospitalToggle.checked = false; // Reset toggle
-        
-        if (!currentOperation) {
-            resetView();
+        hospitalToggle.checked = false;
+
+        if (!opData) {
+            dynamicContent.style.display = "none";
             return;
         }
-
-        emptyState.style.display = "none";
-        dynamicContent.style.display = "block";
-        hospitalSection.style.display = currentOperation.allowHospital ? "flex" : "none";
-
-        renderZones();
+        hospitalSection.style.display = opData.allowHospital ? "flex" : "none";
+        prepareSubsidioDocs(opData);
     });
 
     hospitalToggle.addEventListener("change", () => {
-        // Al cambiar el toggle, refrescamos las zonas (esto limpia las imágenes previas para evitar desorden)
-        images = [];
-        renderZones();
+        const val = subsidioSelect.value;
+        if(val && SUBSIDIO_OPERATIONS[val]) {
+            images = []; 
+            prepareSubsidioDocs(SUBSIDIO_OPERATIONS[val]);
+        }
     });
 
-    function resetView() {
+    function prepareSubsidioDocs(opData) {
+        currentDocsConfig = opData.baseDocs.map(d => ({...d, type: 'base'}));
+        if (opData.allowHospital && hospitalToggle.checked) {
+            const hDocs = opData.hospitalDocs.map(d => ({...d, type: 'hospital'}));
+            currentDocsConfig = [...currentDocsConfig, ...hDocs];
+        }
+        currentLabel = opData.label + (hospitalToggle.checked ? "_Hospitalizado" : "");
+        renderZones();
+    }
+
+    function resetAll() {
+        images = [];
+        currentDocsConfig = [];
+        subsidioSelect.value = "";
+        hospitalToggle.checked = false;
+        subSelectionWrapper.style.display = "none";
+        hospitalSection.style.display = "none";
         dynamicContent.style.display = "none";
         emptyState.style.display = "block";
-        hospitalSection.style.display = "none";
         generateBtn.disabled = true;
     }
 
+    // --- RENDERIZADO Y CARGA DE ARCHIVOS ---
+
     function renderZones() {
         zonesContainer.innerHTML = "";
-        if (!currentOperation) return;
+        if (currentDocsConfig.length === 0) return;
+        emptyState.style.display = "none";
+        dynamicContent.style.display = "block";
 
-        // Mezclar documentos base y documentos de hospital (si aplica)
-        // Añadimos una propiedad 'type' para distinguirlos
-        let docsToShow = currentOperation.baseDocs.map(d => ({...d, type: 'base'}));
-        
-        if (currentOperation.allowHospital && hospitalToggle.checked) {
-            const hDocs = currentOperation.hospitalDocs.map(d => ({...d, type: 'hospital'}));
-            docsToShow = [...docsToShow, ...hDocs];
-        }
-
-        docsToShow.forEach((doc, index) => {
+        currentDocsConfig.forEach((doc, index) => {
             const card = document.createElement("div");
-            // Agregamos clase especial si es de hospital
-            const extraClass = doc.type === 'hospital' ? 'hospital-card' : '';
-            card.className = `upload-card ${extraClass}`;
+            let extraClass = "";
+            if (doc.type === 'hospital') extraClass = "hospital-card";
+            if (doc.optional) extraClass = "optional-card";
             
+            card.className = `upload-card ${extraClass}`;
             card.dataset.index = index;
             card.innerHTML = `
               <div class="upload-area">
@@ -355,38 +434,19 @@
             zonesContainer.appendChild(card);
             card.querySelector(".upload-area").addEventListener("click", () => openModal(index));
         });
-        updateGenerateButtonState(docsToShow.length);
-    }
-
-    // --- Modal y Archivos (CORREGIDO) ---
-    function openModal(index) { 
-        currentUploadIndex = index; 
-        modal.classList.add("active"); 
+        updateGenerateButtonState();
     }
     
-    function closeModal() { 
-        modal.classList.remove("active"); 
-        // NO reseteamos currentUploadIndex aquí inmediatamente
-    }
+    function openModal(index) { currentUploadIndex = index; selectionModal.classList.add("active"); }
     
-    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    function closeModal(id) { document.getElementById(id).classList.remove("active"); } 
+    selectionModal.addEventListener("click", (e) => { if (e.target === selectionModal) closeModal('selection-modal'); });
 
-    function triggerCamera() { 
-        if (currentUploadIndex === null) return; 
-        inputCamera.value = ""; 
-        inputCamera.click(); 
-        closeModal(); 
-    }
-    
-    function triggerFiles() { 
-        if (currentUploadIndex === null) return; 
-        inputFiles.value = ""; 
-        inputFiles.click(); 
-        closeModal(); 
-    }
+    function triggerCamera() { if(currentUploadIndex===null)return; inputCamera.value=""; inputCamera.click(); closeModal('selection-modal'); }
+    function triggerFiles() { if(currentUploadIndex===null)return; inputFiles.value=""; inputFiles.click(); closeModal('selection-modal'); }
 
-    inputCamera.addEventListener("change", (ev) => processFileSelection(ev));
-    inputFiles.addEventListener("change", (ev) => processFileSelection(ev));
+    inputCamera.addEventListener("change", processFileSelection);
+    inputFiles.addEventListener("change", processFileSelection);
 
     function processFileSelection(ev) {
         const file = ev.target.files[0];
@@ -395,110 +455,75 @@
         }
     }
 
-    // --- Validación OCR ---
-    async function validarDocumento(file, cardElement) {
-        const uploadArea = cardElement.querySelector(".upload-area");
-        const originalContent = uploadArea.innerHTML;
-
-        uploadArea.innerHTML = `
-            <div class="loader"></div>
-            <div style="margin-top:10px; font-size:0.75rem; color:#6B7280; font-weight:500;">Validando...</div>
-        `;
-
-        try {
-            const result = await Tesseract.recognize(file, 'spa');
-            const texto = result.data.text.toLowerCase();
-            const confianza = result.data.confidence;
-            
-            let hits = 0;
-            PALABRAS_CLAVE_MEDICAS.forEach(word => { if (texto.includes(word)) hits++; });
-
-            console.log(`OCR: Confianza ${confianza}, Largo ${texto.length}, Hits ${hits}`);
-
-            let isValid = false;
-            // Regla A: Palabras clave encontradas
-            if (hits >= 2) isValid = true;
-            // Regla B: Fallback (Texto largo y nítido)
-            else if (texto.length > 80 && confianza > 60) isValid = true;
-
-            if (isValid) {
-                return true;
-            } else {
-                let msg = "No se detectó suficiente texto.";
-                if (confianza < 50) msg = "La imagen está muy borrosa.";
-                else if (hits < 2) msg = "No parece un documento médico válido.";
-                
-                alert(`⚠️ Imagen rechazada: ${msg}`);
-                uploadArea.innerHTML = originalContent;
-                return false;
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Error al leer la imagen.");
-            uploadArea.innerHTML = originalContent;
-            return false;
-        }
-    }
-
-    async function handleImageFile(file, index) {
+    function handleImageFile(file, index) {
         const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
-        if (!card) return;
+        const uploadArea = card.querySelector(".upload-area");
+        uploadArea.innerHTML = `<div class="loader"></div><div style="font-size:0.7rem; margin-top:5px;">Cargando...</div>`;
 
-        const esValido = await validarDocumento(file, card);
-
-        if (esValido) {
+        setTimeout(() => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 images[index] = { dataUrl: e.target.result, index: index };
                 updateCardVisuals(card, e.target.result, index);
-                const totalDocs = document.querySelectorAll('.upload-card').length;
-                updateGenerateButtonState(totalDocs);
+                updateGenerateButtonState();
             };
             reader.readAsDataURL(file);
-        }
+        }, 500);
     }
 
     function updateCardVisuals(card, dataUrl, index) {
         const uploadArea = card.querySelector(".upload-area");
         uploadArea.innerHTML = "";
-        
         const img = document.createElement("img");
-        img.src = dataUrl;
-        img.className = "preview-img";
-        
+        img.src = dataUrl; img.className = "preview-img";
         const badge = document.createElement("div");
         badge.className = "success-badge";
         badge.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>`;
-        
         const editOverlay = document.createElement("div");
         editOverlay.className = "edit-overlay";
-        editOverlay.textContent = "Cambiar Foto";
-        editOverlay.addEventListener("click", (e) => {
-            e.stopPropagation();
-            openModal(index);
-        });
-
-        uploadArea.appendChild(img);
-        uploadArea.appendChild(badge);
-        uploadArea.appendChild(editOverlay);
+        editOverlay.textContent = "Cambiar";
+        editOverlay.addEventListener("click", (e) => { e.stopPropagation(); openModal(index); });
+        uploadArea.appendChild(img); uploadArea.appendChild(badge); uploadArea.appendChild(editOverlay);
         card.classList.add("completed");
     }
 
-    function updateGenerateButtonState(totalDocs) {
-        let completeCount = 0;
-        for(let i=0; i<totalDocs; i++) {
-            if(images[i] && images[i].dataUrl) completeCount++;
+    // --- LÓGICA DE VALIDACIÓN DEL BOTÓN ---
+    function updateGenerateButtonState() {
+        const mainType = mainTypeSelect.value;
+        let isValid = false;
+        const validImagesCount = images.filter(img => img && img.dataUrl).length;
+
+        if (mainType === "simple") {
+            isValid = validImagesCount >= 1;
+        } else if (mainType === "complex") {
+            const requiredIndices = currentDocsConfig
+                .map((doc, i) => doc.optional ? -1 : i)
+                .filter(i => i !== -1);
+            
+            const allRequiredUploaded = requiredIndices.every(i => images[i] && images[i].dataUrl);
+            isValid = allRequiredUploaded;
         }
-        generateBtn.disabled = (completeCount !== totalDocs) || (totalDocs === 0);
+
+        generateBtn.disabled = !isValid;
+    }
+    
+    // --- GENERACIÓN PDF CON MODAL DE AVISO ---
+    
+    generateBtn.addEventListener("click", () => {
+        if (!generateBtn.disabled) {
+            pdfNoticeModal.classList.add("active");
+        }
+    });
+
+    function cancelPdfGeneration() {
+        closeModal('pdf-notice-modal');
     }
 
-    // --- PDF ---
-    function loadImage(url) { return new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = url; }); }
-
-    generateBtn.addEventListener("click", async () => {
+    async function generateAndDownload() {
+        closeModal('pdf-notice-modal');
         generateBtn.disabled = true;
         const oldText = generateBtn.innerHTML;
-        generateBtn.innerHTML = "Generando PDF...";
+        generateBtn.innerHTML = '<span class="loader" style="border-top-color: white;"></span>';
 
         try {
             const { jsPDF } = window.jspdf;
@@ -506,43 +531,43 @@
             const pWidth = doc.internal.pageSize.getWidth();
             const pHeight = doc.internal.pageSize.getHeight();
             const margin = 15;
-            let y = margin;
-
-            const cards = document.querySelectorAll('.upload-card');
-            const totalDocs = cards.length;
             
-            for (let i = 0; i < totalDocs; i++) {
-                if (!images[i]) continue;
-                
-                const imgEl = await loadImage(images[i].dataUrl);
+            const validImages = images.filter(img => img && img.dataUrl).sort((a,b) => a.index - b.index);
+
+            for (let i = 0; i < validImages.length; i++) {
+                const item = validImages[i];
+                if (i > 0) doc.addPage();
+
+                const docName = currentDocsConfig[item.index].name;
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(14);
+                doc.setTextColor(0, 71, 36);
+                doc.text(`${item.index + 1}. ${docName}`, margin, margin + 5);
+
+                const imgEl = await loadImage(item.dataUrl);
                 const availW = pWidth - (margin * 2);
+                const availH = pHeight - (margin * 2) - 15;
                 const ratio = imgEl.height / imgEl.width;
-                let imgH = availW * ratio;
+                let imgW = availW; let imgH = imgW * ratio;
 
-                if (imgH > (pHeight - margin * 2)) imgH = pHeight - margin * 2;
-
-                if (y + imgH > pHeight - margin) {
-                    doc.addPage();
-                    y = margin;
-                }
-                
-                doc.addImage(images[i].dataUrl, "JPEG", margin, y, availW, imgH);
-                y += imgH + 10;
+                if (imgH > availH) { imgH = availH; imgW = imgH / ratio; }
+                const xPos = margin + (availW - imgW) / 2;
+                doc.addImage(item.dataUrl, "JPEG", xPos, margin + 15, imgW, imgH);
             }
-            
-            let label = currentOperation.label;
-            if(hospitalToggle.checked) label += "_Hospitalizado";
-            doc.save(`Subsidios_${label}.pdf`);
+            doc.save(`Gestion_${currentLabel}.pdf`);
 
         } catch (e) {
             console.error(e);
-            alert("Error al generar PDF");
+            alert("Error al generar PDF.");
         } finally {
             generateBtn.innerHTML = oldText;
-            generateBtn.disabled = false;
+            updateGenerateButtonState(); 
         }
-    });
+    }
+
+    function loadImage(url) { return new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = url; }); }
+    
+    updateGenerateButtonState();
   </script>
 </body>
 </html>
-
