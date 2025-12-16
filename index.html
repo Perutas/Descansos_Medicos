@@ -18,232 +18,121 @@
        ESTILOS (CSS)
        ========================================= */
     :root {
-      --color-primary: #bed000; /* Verde Lima */
-      --color-secondary: #004724; /* Verde Oscuro */
+      --color-primary: #bed000;
+      --color-secondary: #004724;
+      --color-hospital: #0070f3; /* Azul para diferenciar hospitalización */
+      --bg-hospital: #f0f9ff;
       --bg-body: #F0F2F5;
       --bg-card: #FFFFFF;
       --text-main: #1F2937;
       --text-muted: #6B7280;
-      --radius-lg: 16px;
       --font-family: 'Poppins', sans-serif;
     }
 
     * { box-sizing: border-box; }
 
     body {
-      margin: 0;
-      font-family: var(--font-family);
-      background-color: var(--bg-body);
-      /* Patrón de puntos sutil */
-      background-image: radial-gradient(#bed000 1px, transparent 1px);
-      background-size: 24px 24px;
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
+      margin: 0; font-family: var(--font-family); background-color: var(--bg-body);
+      background-image: radial-gradient(#bed000 1px, transparent 1px); background-size: 24px 24px;
+      color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; padding: 20px;
     }
 
     @media (min-width: 800px) { body { align-items: center; } }
     @media (max-width: 600px) { body { padding: 10px; } }
 
-    /* CONTENEDOR PRINCIPAL */
     .app-container {
-      width: 100%;
-      max-width: 1000px;
-      background: var(--bg-card);
-      border-radius: 24px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      width: 100%; max-width: 1000px; background: var(--bg-card); border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column;
     }
 
     .top-bar { height: 8px; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); }
 
-    /* HEADER */
-    .app-header {
-      padding: 24px 32px;
-      border-bottom: 1px solid #E5E7EB;
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      background: white;
-    }
+    .app-header { padding: 24px 32px; border-bottom: 1px solid #E5E7EB; display: flex; gap: 15px; align-items: center; background: white; }
+    .logo-f { background: var(--color-secondary); color: var(--color-primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; flex-shrink: 0; }
+    .header-content h1 { margin: 0; font-size: 1.25rem; color: var(--color-secondary); line-height: 1.2; }
+    .header-content p { margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted); }
 
-    .logo-f {
-      background: var(--color-secondary);
-      color: var(--color-primary);
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .header-content h1 {
-      margin: 0; font-size: 1.25rem; color: var(--color-secondary); line-height: 1.2;
-    }
-    .header-content p {
-      margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted);
-    }
-
-    /* GRID PRINCIPAL */
-    .app-body {
-      padding: 30px;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-    }
+    .app-body { padding: 30px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
     @media (max-width: 850px) { .app-body { grid-template-columns: 1fr; padding: 20px; } }
 
-    /* ELEMENTOS DE FORMULARIO */
     .section-title { font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
     
     select {
-      width: 100%; padding: 14px;
-      border: 2px solid #E5E7EB; border-radius: 12px;
-      font-size: 0.95rem; cursor: pointer; margin-bottom: 25px;
-      background-color: white; transition: border 0.2s;
+      width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 12px;
+      font-size: 0.95rem; cursor: pointer; margin-bottom: 15px; background-color: white;
     }
     select:focus { outline: none; border-color: var(--color-secondary); }
 
-    /* GRILLA DE DOCUMENTOS */
-    .zones-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
+    /* TOGGLE SWITCH STYLE (Personalizado con color azul para hospital) */
+    .toggle-container {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 25px;
+      background: var(--bg-hospital); padding: 12px 16px; border-radius: 12px; border: 1px solid #bfdbfe;
+      transition: all 0.3s;
     }
-
-    /* TARJETA DE SUBIDA */
-    .upload-card {
-      background: white;
-      border: 2px dashed #D1D5DB;
-      border-radius: 16px;
-      overflow: hidden;
-      transition: all 0.2s;
-      position: relative;
-      animation: fadeIn 0.4s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .upload-card:hover { border-color: var(--color-secondary); background: #F9FAFB; }
-    .upload-card.completed { border-style: solid; border-color: var(--color-secondary); }
-
-    .upload-area {
-      height: 150px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      cursor: pointer; padding: 10px; text-align: center;
-    }
-
-    .card-footer-info {
-      background: #F9FAFB; padding: 10px 14px;
-      border-top: 1px solid #F3F4F6;
-    }
-    .doc-name { font-size: 0.8rem; font-weight: 700; color: var(--color-secondary); display: block; }
-    .doc-desc { font-size: 0.7rem; color: var(--text-muted); }
-
-    /* PREVIEW DE IMAGEN Y BADGES */
-    .preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0;}
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     
-    .success-badge {
-      position: absolute; top: 10px; right: 10px;
-      background: white; border-radius: 50%;
-      width: 24px; height: 24px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-secondary);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      z-index: 2;
+    /* Color activo del toggle (Azul Hospital) */
+    input:checked + .slider { background-color: var(--color-hospital); }
+    input:checked + .slider:before { transform: translateX(20px); }
+    
+    .toggle-label { font-size: 0.9rem; font-weight: 600; color: #1e3a8a; }
+
+    /* GRID & CARDS */
+    .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
+    .upload-card {
+      background: white; border: 2px dashed #D1D5DB; border-radius: 16px;
+      overflow: hidden; transition: all 0.2s; position: relative; animation: fadeIn 0.4s ease;
+    }
+    
+    /* Estilo especial para tarjetas de HOSPITALIZACIÓN */
+    .upload-card.hospital-card {
+      background-color: #f8fbff;
+      border-color: #93c5fd; /* Borde azul claro */
+    }
+    .upload-card.hospital-card:hover {
+      border-color: var(--color-hospital);
+    }
+    .upload-card.hospital-card .upload-area svg {
+      color: var(--color-hospital) !important;
     }
 
-    .edit-overlay {
-      position: absolute; inset: 0;
-      background: rgba(0, 71, 36, 0.85);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; color: white; font-weight: 600; font-size: 0.9rem;
-      transition: opacity 0.2s; z-index: 3; cursor: pointer;
-      backdrop-filter: blur(2px);
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .upload-card:hover { border-color: var(--color-secondary); background: #F9FAFB; }
+    .upload-card.completed { border-style: solid; border-color: var(--color-secondary); background: white; }
+
+    .upload-area { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 10px; text-align: center; }
+    .card-footer-info { background: #F9FAFB; padding: 10px 14px; border-top: 1px solid #F3F4F6; min-height: 60px; display: flex; flex-direction: column; justify-content: center;}
+    .doc-name { font-size: 0.8rem; font-weight: 700; color: var(--color-secondary); display: block; line-height: 1.2; margin-bottom: 4px; }
+    .upload-card.hospital-card .doc-name { color: var(--color-hospital); }
+    .doc-desc { font-size: 0.65rem; color: var(--text-muted); line-height: 1.2; }
+
+    .preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .success-badge { position: absolute; top: 10px; right: 10px; background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--color-secondary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2; }
+    .edit-overlay { position: absolute; inset: 0; background: rgba(0, 71, 36, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; color: white; font-weight: 600; font-size: 0.9rem; transition: opacity 0.2s; z-index: 3; cursor: pointer; backdrop-filter: blur(2px); }
     .upload-card.completed:hover .edit-overlay { opacity: 1; }
 
-    /* SIDEBAR */
-    .sidebar-card {
-      background: #F9FAFB;
-      padding: 24px;
-      border-radius: 20px;
-      position: sticky; top: 20px;
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: var(--color-secondary);
-      color: white; border: none;
-      padding: 16px; border-radius: 50px;
-      font-weight: 600; font-size: 1rem;
-      cursor: pointer;
-      display: flex; justify-content: center; align-items: center; gap: 10px;
-      transition: transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 12px rgba(0, 71, 36, 0.2);
-    }
+    .sidebar-card { background: #F9FAFB; padding: 24px; border-radius: 20px; position: sticky; top: 20px; }
+    .btn-primary { width: 100%; background: var(--color-secondary); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(0, 71, 36, 0.2); }
     .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 71, 36, 0.3); }
     .btn-primary:disabled { background: #D1D5DB; cursor: not-allowed; box-shadow: none; }
 
-    /* =========================================
-       MODAL (POP UP)
-       ========================================= */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; visibility: hidden;
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-    }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(5px); }
     .modal-overlay.active { opacity: 1; visibility: visible; }
-
-    .modal-content {
-      background: white;
-      width: 90%; max-width: 340px;
-      border-radius: 24px; padding: 30px;
-      transform: translateY(20px);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
+    .modal-content { background: white; width: 90%; max-width: 340px; border-radius: 24px; padding: 30px; transform: translateY(20px); transition: transform 0.3s; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
     .modal-overlay.active .modal-content { transform: translateY(0); }
-
     .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 24px; }
-
     .modal-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-
-    .option-btn {
-      background: #F3F4F6;
-      border: 2px solid transparent;
-      border-radius: 16px; padding: 24px 12px;
-      cursor: pointer; transition: all 0.2s;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-    }
+    .option-btn { background: #F3F4F6; border: 2px solid transparent; border-radius: 16px; padding: 24px 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .option-btn:hover { background: #E5E7EB; transform: translateY(-3px); }
-    .option-btn svg { width: 36px; height: 36px; color: var(--color-secondary); }
-    .option-btn span { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
-
-    .cancel-btn {
-      background: none; border: none; color: #9CA3AF;
-      font-size: 0.9rem; cursor: pointer; padding: 8px; width: 100%;
-    }
-    .cancel-btn:hover { color: var(--text-main); }
-
-    /* LOADER ANIMADO */
-    .loader {
-      width: 24px; height: 24px;
-      border: 3px solid rgba(0,0,0,0.1);
-      border-top-color: var(--color-primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    .cancel-btn { background: none; border: none; color: #9CA3AF; font-size: 0.9rem; cursor: pointer; padding: 8px; width: 100%; }
+    
+    .loader { width: 24px; height: 24px; border: 3px solid rgba(0,0,0,0.1); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
   </style>
 </head>
 <body>
@@ -268,18 +157,25 @@
         
         <select id="operation-select">
           <option value="">-- Seleccione una opción --</option>
-          <option value="1">Subsidios clínica privada</option>
-          <option value="2">Subsidios hospital público</option>
-          <option value="3">Clínica privada (+15 días)</option>
+          <option value="1">Enfermedad Común</option>
+          <option value="2">Accidente de Trabajo</option>
+          <option value="3">Maternidad</option>
         </select>
+
+        <div id="hospital-section" class="toggle-container" style="display: none;">
+          <label class="switch">
+            <input type="checkbox" id="hospital-toggle">
+            <span class="slider round"></span>
+          </label>
+          <span class="toggle-label">¿Paciente hospitalizado? (Agregar docs)</span>
+        </div>
 
         <div id="dynamic-content" style="display: none;">
           <div class="section-title">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             2. Documentos Requeridos
           </div>
-          <div class="zones-grid" id="zones-container">
-            </div>
+          <div class="zones-grid" id="zones-container"></div>
         </div>
         
         <div id="empty-state" style="text-align: center; padding: 60px 20px; color: #9CA3AF; background: #F9FAFB; border-radius: 16px; border: 1px dashed #E5E7EB;">
@@ -291,9 +187,9 @@
         <div class="sidebar-card">
           <div class="section-title">Instrucciones</div>
           <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 24px;">
-            <li>Usa la <strong>Cámara</strong> para fotos nuevas o <strong>Archivos</strong> para documentos escaneados.</li>
-            <li>El sistema buscará palabras como <em>"Médico", "Diagnóstico", "Hospital"</em>.</li>
-            <li>Si la imagen es borrosa, será rechazada automáticamente.</li>
+            <li>Si hubo internamiento, activa el botón <strong>"Hospitalizado"</strong> (azul).</li>
+            <li>Las tarjetas azules indican documentos de hospitalización.</li>
+            <li>El sistema valida que la foto sea un documento legible.</li>
           </ul>
 
           <button id="generate-btn" class="btn-primary" disabled>
@@ -307,19 +203,16 @@
   <div class="modal-overlay" id="selection-modal">
     <div class="modal-content">
       <div class="modal-title">¿Cómo quieres subir el documento?</div>
-      
       <div class="modal-options">
         <button class="option-btn" onclick="triggerCamera()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
           <span>Usar Cámara</span>
         </button>
-
         <button class="option-btn" onclick="triggerFiles()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
           <span>Mis Archivos</span>
         </button>
       </div>
-
       <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
     </div>
   </div>
@@ -328,299 +221,326 @@
   <input type="file" id="input-files" accept="image/*" style="display:none" />
 
   <script>
-    /* =========================================
-       1. CONFIGURACIÓN Y REFERENCIAS
-       ========================================= */
+    // Referencias
     const operationSelect = document.getElementById("operation-select");
+    const hospitalSection = document.getElementById("hospital-section");
+    const hospitalToggle = document.getElementById("hospital-toggle");
     const zonesContainer = document.getElementById("zones-container");
     const generateBtn = document.getElementById("generate-btn");
     const dynamicContent = document.getElementById("dynamic-content");
     const emptyState = document.getElementById("empty-state");
     
-    // Modal & Inputs
     const modal = document.getElementById("selection-modal");
     const inputCamera = document.getElementById("input-camera");
     const inputFiles = document.getElementById("input-files");
 
     let currentUploadIndex = null;
+    let currentOperation = null;
+    let images = []; 
 
-    /* =========================================
-       2. DICCIONARIO DE VALIDACIÓN (KEYWORDS)
-       ========================================= */
-    // Palabras que el OCR buscará para confirmar que es un doc médico
+    // Palabras clave
     const PALABRAS_CLAVE_MEDICAS = [
-      "certificado", "medico", "médico", "salud", "descanso", "paciente", 
-      "diagnostico", "diagnóstico", "tratamiento", "fecha", "dias", "días",
-      "cmp", "c.m.p", "colegio", "hospital", "clinica", "clínica", 
-      "seguro", "essalud", "minsa", "firma", "sello", "atencion", "receta",
-      "incapacidad", "contingencia", "inicio", "fin", "periodo"
+        "certificado", "medico", "médico", "diagnostico", "diagnóstico", "descanso", 
+        "incapacidad", "hospital", "clinica", "clínica", "paciente", "tratamiento",
+        "valorada", "especialista", "sellado", "indicaciones", "receta", "terapias", 
+        "laboratorio", "imágenes", "liquidación", "gastos", "solicitud", "atención", 
+        "ecográfico", "trimestre", "embarazo", "essalud", "epicrisis", "resumen", 
+        "operatorio", "quirúrgico", "firma", "sello", "historia"
     ];
 
-    /* =========================================
-       3. LÓGICA DE NEGOCIO (OPERACIONES)
-       ========================================= */
+    // CONFIGURACIÓN DE OPERACIONES ACTUALIZADA CON TUS 4 DOCUMENTOS EXACTOS
     const OPERATIONS = {
-      "1": { label: "Subsidios_clinica_privada", documents: [{ name: "Certificado Médico", subtitle: "Emitido por clínica privada" }] },
-      "2": { label: "Subsidios_hospital_publico", documents: [{ name: "Certificado Médico", subtitle: "Hospital público" }, { name: "Comprobante", subtitle: "Atención o pago" }] },
-      "3": { label: "Clinica_privada_+15_dias", documents: [{ name: "Certificado Médico", subtitle: "Clínica privada" }, { name: "Informe Médico", subtitle: "Detallado" }, { name: "Descanso Prolongado", subtitle: "+15 días" }] }
+        "1": { 
+            label: "Enfermedad_Comun", 
+            allowHospital: true,
+            baseDocs: [
+                { name: "Certificado Médico", subtitle: "Especie valorada o formato de clínica, firmado y sellado por médico habilitado y especialista" },
+                { name: "Copia de indicaciones médicas", subtitle: "Receta médica, tratamientos, terapias" },
+                { name: "Resultados de exámenes", subtitle: "Laboratorio y imágenes" },
+                { name: "Pago por consulta / Liquidación", subtitle: "Comprobante de pago por consulta médica o liquidación de gastos" }
+            ],
+            hospitalDocs: [
+                { name: "Epicrisis", subtitle: "Resumen de la hospitalización" },
+                { name: "Reporte Operatorio", subtitle: "En caso de tratamiento quirúrgico" }
+            ]
+        },
+        "2": { 
+            label: "Accidente_Trabajo", 
+            allowHospital: true,
+            baseDocs: [
+                { name: "Certificado Médico", subtitle: "Firmado y sellado por especialista" },
+                { name: "Indicaciones Médicas", subtitle: "Copia recibida en la fecha de atención" },
+                { name: "Receta y Tratamientos", subtitle: "Receta médica, tratamientos, terapias" },
+                { name: "Solicitud de Atención", subtitle: "A partir de la segunda atención médica" }
+            ],
+            hospitalDocs: [
+                { name: "Epicrisis", subtitle: "Resumen de la hospitalización" },
+                { name: "Resultados de Exámenes", subtitle: "De ayuda al diagnóstico que sustenten incapacidad" }
+            ]
+        },
+        "3": { 
+            label: "Maternidad", 
+            allowHospital: false,
+            baseDocs: [
+                { name: "Exámenes de Diagnóstico", subtitle: "Resultados que sustenten la incapacidad" },
+                { name: "Informe Ecográfico", subtitle: "Del III Trimestre (28 a 42 semanas)" },
+                { name: "Certificado (Embarazo Prolongado)", subtitle: "Anexo 18 Essalud, si aplica" }
+            ],
+            hospitalDocs: []
+        }
     };
 
-    let currentOperation = null;
-    let images = [];
+    // --- Lógica UI ---
+    operationSelect.addEventListener("change", () => {
+        const value = operationSelect.value;
+        currentOperation = OPERATIONS[value] || null;
+        images = [];
+        hospitalToggle.checked = false; // Reset toggle
+        
+        if (!currentOperation) {
+            resetView();
+            return;
+        }
 
-    // --- FUNCIONES DEL MODAL ---
-    function openModal(index) { currentUploadIndex = index; modal.classList.add("active"); }
-    function closeModal() { modal.classList.remove("active"); currentUploadIndex = null; }
+        emptyState.style.display = "none";
+        dynamicContent.style.display = "block";
+        hospitalSection.style.display = currentOperation.allowHospital ? "flex" : "none";
+
+        renderZones();
+    });
+
+    hospitalToggle.addEventListener("change", () => {
+        // Al cambiar el toggle, refrescamos las zonas (esto limpia las imágenes previas para evitar desorden)
+        images = [];
+        renderZones();
+    });
+
+    function resetView() {
+        dynamicContent.style.display = "none";
+        emptyState.style.display = "block";
+        hospitalSection.style.display = "none";
+        generateBtn.disabled = true;
+    }
+
+    function renderZones() {
+        zonesContainer.innerHTML = "";
+        if (!currentOperation) return;
+
+        // Mezclar documentos base y documentos de hospital (si aplica)
+        // Añadimos una propiedad 'type' para distinguirlos
+        let docsToShow = currentOperation.baseDocs.map(d => ({...d, type: 'base'}));
+        
+        if (currentOperation.allowHospital && hospitalToggle.checked) {
+            const hDocs = currentOperation.hospitalDocs.map(d => ({...d, type: 'hospital'}));
+            docsToShow = [...docsToShow, ...hDocs];
+        }
+
+        docsToShow.forEach((doc, index) => {
+            const card = document.createElement("div");
+            // Agregamos clase especial si es de hospital
+            const extraClass = doc.type === 'hospital' ? 'hospital-card' : '';
+            card.className = `upload-card ${extraClass}`;
+            
+            card.dataset.index = index;
+            card.innerHTML = `
+              <div class="upload-area">
+                <svg style="width:36px; height:36px; color:#D1D5DB; margin-bottom:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span style="font-size:0.85rem; font-weight:600; color:#4B5563;">Subir Documento</span>
+              </div>
+              <div class="card-footer-info">
+                <span class="doc-name">${index + 1}. ${doc.name}</span>
+                <span class="doc-desc">${doc.subtitle}</span>
+              </div>
+            `;
+            zonesContainer.appendChild(card);
+            card.querySelector(".upload-area").addEventListener("click", () => openModal(index));
+        });
+        updateGenerateButtonState(docsToShow.length);
+    }
+
+    // --- Modal y Archivos (CORREGIDO) ---
+    function openModal(index) { 
+        currentUploadIndex = index; 
+        modal.classList.add("active"); 
+    }
     
-    // Cerrar al hacer clic fuera del modal
+    function closeModal() { 
+        modal.classList.remove("active"); 
+        // NO reseteamos currentUploadIndex aquí inmediatamente
+    }
+    
     modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 
-    // Activadores de Inputs
-    function triggerCamera() {
-      if (currentUploadIndex === null) return;
-      inputCamera.value = ""; inputCamera.click();
-      modal.classList.remove("active");
+    function triggerCamera() { 
+        if (currentUploadIndex === null) return; 
+        inputCamera.value = ""; 
+        inputCamera.click(); 
+        closeModal(); 
+    }
+    
+    function triggerFiles() { 
+        if (currentUploadIndex === null) return; 
+        inputFiles.value = ""; 
+        inputFiles.click(); 
+        closeModal(); 
     }
 
-    function triggerFiles() {
-      if (currentUploadIndex === null) return;
-      inputFiles.value = ""; inputFiles.click();
-      modal.classList.remove("active");
-    }
-
-    // --- EVENT LISTENERS PARA SUBIDA DE ARCHIVOS ---
     inputCamera.addEventListener("change", (ev) => processFileSelection(ev));
     inputFiles.addEventListener("change", (ev) => processFileSelection(ev));
 
     function processFileSelection(ev) {
-      const file = ev.target.files[0];
-      if (file && file.type.startsWith("image/") && currentUploadIndex !== null) {
-        handleImageFile(file, currentUploadIndex);
-      }
+        const file = ev.target.files[0];
+        if (file && file.type.startsWith("image/") && currentUploadIndex !== null) {
+            handleImageFile(file, currentUploadIndex);
+        }
     }
 
-    // --- GENERACIÓN DE LA INTERFAZ ---
-    operationSelect.addEventListener("change", () => {
-      const value = operationSelect.value;
-      currentOperation = OPERATIONS[value] || null;
-      images = [];
-      zonesContainer.innerHTML = "";
-
-      if (!currentOperation) {
-        dynamicContent.style.display = "none";
-        emptyState.style.display = "block";
-        generateBtn.disabled = true;
-        return;
-      }
-
-      emptyState.style.display = "none";
-      dynamicContent.style.display = "block";
-
-      // Crear tarjetas dinámicamente
-      currentOperation.documents.forEach((doc, index) => {
-        const card = document.createElement("div");
-        card.className = "upload-card";
-        card.dataset.index = index;
-        card.innerHTML = `
-          <div class="upload-area">
-            <svg style="width:36px; height:36px; color:#D1D5DB; margin-bottom:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span style="font-size:0.85rem; font-weight:600; color:#4B5563;">Subir Documento</span>
-          </div>
-          <div class="card-footer-info">
-            <span class="doc-name">${index + 1}. ${doc.name}</span>
-            <span class="doc-desc">${doc.subtitle}</span>
-          </div>
-        `;
-        zonesContainer.appendChild(card);
-        
-        // Al hacer click, abrir MODAL
-        card.querySelector(".upload-area").addEventListener("click", () => openModal(index));
-      });
-      updateGenerateButtonState();
-    });
-
-    /* =========================================
-       4. VALIDACIÓN ROBUSTA (OCR + KEYWORDS)
-       ========================================= */
+    // --- Validación OCR ---
     async function validarDocumento(file, cardElement) {
-      const uploadArea = cardElement.querySelector(".upload-area");
-      const originalContent = uploadArea.innerHTML;
+        const uploadArea = cardElement.querySelector(".upload-area");
+        const originalContent = uploadArea.innerHTML;
 
-      // Mostrar Loader
-      uploadArea.innerHTML = `
-        <div class="loader"></div>
-        <div style="display:flex; flex-direction:column; gap:2px; margin-top:10px;">
-          <span style="font-size:0.8rem; color:#1F2937; font-weight:600;">Analizando...</span>
-          <span style="font-size:0.7rem; color:#6B7280;">Leyendo texto</span>
-        </div>
-      `;
+        uploadArea.innerHTML = `
+            <div class="loader"></div>
+            <div style="margin-top:10px; font-size:0.75rem; color:#6B7280; font-weight:500;">Validando...</div>
+        `;
 
-      try {
-        // Ejecutar Tesseract OCR
-        const result = await Tesseract.recognize(file, 'spa');
-        
-        const textoCompleto = result.data.text.toLowerCase();
-        const confianza = result.data.confidence;
-        const longitud = textoCompleto.length;
+        try {
+            const result = await Tesseract.recognize(file, 'spa');
+            const texto = result.data.text.toLowerCase();
+            const confianza = result.data.confidence;
+            
+            let hits = 0;
+            PALABRAS_CLAVE_MEDICAS.forEach(word => { if (texto.includes(word)) hits++; });
 
-        // Búsqueda de palabras clave
-        let palabrasEncontradas = [];
-        PALABRAS_CLAVE_MEDICAS.forEach(palabra => {
-          if (textoCompleto.includes(palabra)) palabrasEncontradas.push(palabra);
-        });
+            console.log(`OCR: Confianza ${confianza}, Largo ${texto.length}, Hits ${hits}`);
 
-        console.log(`OCR -> Confianza: ${confianza}, Largo: ${longitud}, Keywords: ${palabrasEncontradas.length}`);
+            let isValid = false;
+            // Regla A: Palabras clave encontradas
+            if (hits >= 2) isValid = true;
+            // Regla B: Fallback (Texto largo y nítido)
+            else if (texto.length > 80 && confianza > 60) isValid = true;
 
-        // REGLAS DE DECISIÓN
-        let esValido = false;
-        let mensajeError = "";
-
-        // Regla A: Encontramos al menos 2 palabras clave (Certificado, Médico, etc.)
-        if (palabrasEncontradas.length >= 2) {
-          esValido = true;
-        } 
-        // Regla B: No hay palabras clave, pero hay MUCHO texto legible (Fallback)
-        else if (longitud > 100 && confianza > 60) {
-          esValido = true;
+            if (isValid) {
+                return true;
+            } else {
+                let msg = "No se detectó suficiente texto.";
+                if (confianza < 50) msg = "La imagen está muy borrosa.";
+                else if (hits < 2) msg = "No parece un documento médico válido.";
+                
+                alert(`⚠️ Imagen rechazada: ${msg}`);
+                uploadArea.innerHTML = originalContent;
+                return false;
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error al leer la imagen.");
+            uploadArea.innerHTML = originalContent;
+            return false;
         }
-        // Regla C: Rechazo
-        else {
-          esValido = false;
-          if (confianza < 50) {
-            mensajeError = "La imagen está muy borrosa, oscura o desenfocada.";
-          } else if (longitud < 20) {
-            mensajeError = "No se detectó texto en la imagen.";
-          } else {
-            mensajeError = "No parece ser un documento médico válido (Faltan palabras clave como 'Médico', 'Diagnóstico', etc).";
-          }
-        }
-
-        if (esValido) {
-          return true;
-        } else {
-          alert(`⚠️ Documento rechazado\n\n${mensajeError}\nIntenta tomar la foto nuevamente con mejor luz.`);
-          uploadArea.innerHTML = originalContent; // Restaurar
-          return false;
-        }
-
-      } catch (error) {
-        console.error(error);
-        alert("Ocurrió un error técnico al leer la imagen. Intenta de nuevo.");
-        uploadArea.innerHTML = originalContent;
-        return false;
-      }
     }
 
     async function handleImageFile(file, index) {
-      const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
-      if (!card) return;
+        const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
+        if (!card) return;
 
-      const esValido = await validarDocumento(file, card);
+        const esValido = await validarDocumento(file, card);
 
-      if (esValido) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const dataUrl = event.target.result;
-          images[index] = { dataUrl, index };
-          updateCardVisuals(index, dataUrl);
-          updateGenerateButtonState();
-        };
-        reader.readAsDataURL(file);
-      }
+        if (esValido) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                images[index] = { dataUrl: e.target.result, index: index };
+                updateCardVisuals(card, e.target.result, index);
+                const totalDocs = document.querySelectorAll('.upload-card').length;
+                updateGenerateButtonState(totalDocs);
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
-    function updateCardVisuals(index, dataUrl) {
-      const card = zonesContainer.querySelector(`.upload-card[data-index="${index}"]`);
-      const uploadArea = card.querySelector(".upload-area");
-      uploadArea.innerHTML = ""; 
+    function updateCardVisuals(card, dataUrl, index) {
+        const uploadArea = card.querySelector(".upload-area");
+        uploadArea.innerHTML = "";
+        
+        const img = document.createElement("img");
+        img.src = dataUrl;
+        img.className = "preview-img";
+        
+        const badge = document.createElement("div");
+        badge.className = "success-badge";
+        badge.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>`;
+        
+        const editOverlay = document.createElement("div");
+        editOverlay.className = "edit-overlay";
+        editOverlay.textContent = "Cambiar Foto";
+        editOverlay.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openModal(index);
+        });
 
-      const img = document.createElement("img");
-      img.src = dataUrl;
-      img.className = "preview-img";
-
-      const badge = document.createElement("div");
-      badge.className = "success-badge";
-      badge.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>`;
-
-      const editOverlay = document.createElement("div");
-      editOverlay.className = "edit-overlay";
-      editOverlay.innerHTML = `<span>Cambiar Foto</span>`;
-      
-      // Al hacer click en "Cambiar", reabrir modal
-      editOverlay.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openModal(index);
-      });
-
-      uploadArea.appendChild(img);
-      uploadArea.appendChild(badge);
-      uploadArea.appendChild(editOverlay);
-      card.classList.add("completed");
+        uploadArea.appendChild(img);
+        uploadArea.appendChild(badge);
+        uploadArea.appendChild(editOverlay);
+        card.classList.add("completed");
     }
 
-    function updateGenerateButtonState() {
-      if (!currentOperation) { generateBtn.disabled = true; return; }
-      const totalDocs = currentOperation.documents.length;
-      // Verificar que el array tenga elementos en todos los índices necesarios
-      const allComplete = images.length === totalDocs && images.every(img => img && img.dataUrl);
-      generateBtn.disabled = !allComplete;
+    function updateGenerateButtonState(totalDocs) {
+        let completeCount = 0;
+        for(let i=0; i<totalDocs; i++) {
+            if(images[i] && images[i].dataUrl) completeCount++;
+        }
+        generateBtn.disabled = (completeCount !== totalDocs) || (totalDocs === 0);
     }
 
-    /* =========================================
-       5. GENERACIÓN PDF
-       ========================================= */
-    function loadImage(dataUrl) {
-      return new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = dataUrl; });
-    }
+    // --- PDF ---
+    function loadImage(url) { return new Promise((r, j) => { const i = new Image(); i.onload = () => r(i); i.onerror = j; i.src = url; }); }
 
     generateBtn.addEventListener("click", async () => {
-      try {
         generateBtn.disabled = true;
-        const originalText = generateBtn.innerHTML;
-        generateBtn.innerHTML = `<div class="loader" style="width:16px; height:16px; border-color:white; border-top-color:transparent; display:inline-block; margin-right:8px;"></div> Generando...`;
+        const oldText = generateBtn.innerHTML;
+        generateBtn.innerHTML = "Generando PDF...";
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 15;
-        let yPosition = margin;
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+            const pWidth = doc.internal.pageSize.getWidth();
+            const pHeight = doc.internal.pageSize.getHeight();
+            const margin = 15;
+            let y = margin;
 
-        const orderedImages = [...images].sort((a, b) => a.index - b.index);
+            const cards = document.querySelectorAll('.upload-card');
+            const totalDocs = cards.length;
+            
+            for (let i = 0; i < totalDocs; i++) {
+                if (!images[i]) continue;
+                
+                const imgEl = await loadImage(images[i].dataUrl);
+                const availW = pWidth - (margin * 2);
+                const ratio = imgEl.height / imgEl.width;
+                let imgH = availW * ratio;
 
-        for (let i = 0; i < orderedImages.length; i++) {
-          const item = orderedImages[i];
-          const imgEl = await loadImage(item.dataUrl);
-          
-          const availableWidth = pageWidth - (2 * margin);
-          const ratio = imgEl.height / imgEl.width;
-          let imgHeight = availableWidth * ratio;
-          
-          // Si la imagen es más alta que la página, ajustarla
-          if (imgHeight > (pageHeight - (margin * 2))) {
-             imgHeight = pageHeight - (margin * 2);
-          }
+                if (imgH > (pHeight - margin * 2)) imgH = pHeight - margin * 2;
 
-          if (yPosition + imgHeight > pageHeight - margin) {
-            doc.addPage();
-            yPosition = margin;
-          }
-          
-          doc.addImage(item.dataUrl, "JPEG", margin, yPosition, availableWidth, imgHeight);
-          yPosition += imgHeight + 10;
+                if (y + imgH > pHeight - margin) {
+                    doc.addPage();
+                    y = margin;
+                }
+                
+                doc.addImage(images[i].dataUrl, "JPEG", margin, y, availW, imgH);
+                y += imgH + 10;
+            }
+            
+            let label = currentOperation.label;
+            if(hospitalToggle.checked) label += "_Hospitalizado";
+            doc.save(`Subsidios_${label}.pdf`);
+
+        } catch (e) {
+            console.error(e);
+            alert("Error al generar PDF");
+        } finally {
+            generateBtn.innerHTML = oldText;
+            generateBtn.disabled = false;
         }
-
-        doc.save(`Subsidios_${currentOperation.label}.pdf`);
-        
-        // Reset botón
-        generateBtn.innerHTML = originalText;
-        generateBtn.disabled = false;
-
-      } catch (err) {
-        console.error(err);
-        alert("Error al generar PDF. Intenta nuevamente.");
-        updateGenerateButtonState();
-      }
     });
   </script>
 </body>
