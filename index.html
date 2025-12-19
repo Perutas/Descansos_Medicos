@@ -61,7 +61,8 @@
     
     .header-content p { 
       margin: 6px 0 0 0; font-size: 0.85rem; 
-      color: #ef4444; font-weight: 600;
+      color: #ef4444; /* Rojo claro */
+      font-weight: 600;
     }
 
     .app-body { padding: 30px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
@@ -142,9 +143,18 @@
     
     /* MODAL DE AVISO PDF */
     #pdf-notice-modal .modal-content { max-width: 450px; }
-    #pdf-notice-modal .modal-content h3 { font-size: 1.25rem; color: #d32f2f; margin-top: 0; margin-bottom: 15px; }
+    #pdf-notice-modal .modal-content h3 { font-size: 1.25rem; color: #d32f2f; margin-top: 0; margin-bottom: 10px; }
     #pdf-notice-modal .modal-content p { font-size: 0.95rem; color: var(--text-main); text-align: left; line-height: 1.5; margin-bottom: 10px; }
     
+    .alert-box {
+      padding: 12px; 
+      background: #FFFBEA; 
+      border-left: 4px solid #FBC02D; 
+      text-align: left; 
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
     #pdf-notice-modal .modal-content .action-btn { 
       background: linear-gradient(135deg, var(--color-primary), #a2b200); 
       color: #111827; font-weight: 700; padding: 14px 20px; border: none; border-radius: 12px; 
@@ -220,8 +230,8 @@
         <div class="sidebar-card">
           <div class="section-title">Instrucciones</div>
           <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 24px;">
-            <li><strong>Descanso Médico:</strong> Subir todos los documentos que quieras unificar.</li>
-            <li><strong>Subsidios (>20 días):</strong> Debes subir <strong>TODOS</strong> los documentos obligatorios.</li>
+            <li><strong>Descanso Médico:</strong> Sube al menos los 3 documentos obligatorios.</li>
+            <li><strong>Subsidios (>20 días):</strong> Sube <strong>TODOS</strong> los documentos obligatorios.</li>
             <li>El botón se activará cuando completes lo requerido.</li>
           </ul>
 
@@ -256,10 +266,16 @@
       
       <p>Este sistema solo genera un PDF con sus imágenes.</p>
       
-      <p style="padding: 12px; background: #FFFBEA; border-left: 4px solid #FBC02D; margin-top: 15px; margin-bottom: 25px;">
+      <div id="alert-falabella" class="alert-box">
         <strong>Debe subir el archivo en Mi Falabella para finalizar el proceso.</strong><br>
         De lo contrario, su solicitud estará incompleta.
-      </p>
+      </div>
+
+      <div id="alert-essalud" class="alert-box" style="display: none;">
+        <strong>Si ingresaste subsidio que no es de Essalud, debes ingresar a viva essalud para el canje correspondiente:</strong><br>
+        Link: <a href="https://viva.essalud.gob.pe/viva/login" target="_blank" style="color: #0070f3; text-decoration: underline;">https://viva.essalud.gob.pe/viva/login</a><br>
+        de lo contrario no habra recupero de su subsidio
+      </div>
 
       <button class="action-btn" onclick="generateAndDownload()">
         Entendido, Generar PDF
@@ -297,11 +313,11 @@
 
     // --- DATA ---
     const DOCS_DESCANSO_MEDICO = [
-        { name: "Certificado Médico", subtitle: "Recomendado" },
-        { name: "Receta Médica", subtitle: "Recomendado" },
-        { name: "Pago de Consulta", subtitle: "Voucher o boleta" },
-        { name: "Pago de Medicamentos", subtitle: "Voucher o boleta" },
-        { name: "Documentos Adicionales", subtitle: "Si corresponde (Opcional)", optional: true }
+        { name: "Certificado Médico", subtitle: "Obligatorio" },
+        { name: "Receta Médica", subtitle: "Obligatorio" },
+        { name: "Comprobante de Consulta", subtitle: "Obligatorio" },
+        { name: "Pago de Medicamentos", subtitle: "Opcional", optional: true },
+        { name: "Documentos Adicionales", subtitle: "Opcional", optional: true }
     ];
 
     const SUBSIDIO_OPERATIONS = {
@@ -462,7 +478,6 @@
         setTimeout(() => {
             const reader = new FileReader();
             reader.onload = (e) => {
-                // AQUÍ USAMOS NORMALIZACIÓN
                 normalizeImage(e.target.result).then(normalizedUrl => {
                     images[index] = { dataUrl: normalizedUrl, index: index };
                     updateCardVisuals(card, normalizedUrl, index);
@@ -473,22 +488,15 @@
         }, 300);
     }
 
-    // --- NORMALIZACIÓN DE IMAGEN (SOLUCIÓN ROTACIÓN/ESTIRAMIENTO) ---
     function normalizeImage(dataUrl) {
         return new Promise((resolve) => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                
-                // Usamos el ancho/alto visual del elemento Image
                 canvas.width = img.width;
                 canvas.height = img.height;
-                
-                // Dibujar en el canvas "quema" la orientación correcta
                 ctx.drawImage(img, 0, 0);
-                
-                // Retornar nueva dataUrl limpia (JPEG calidad 0.75 para optimizar)
                 resolve(canvas.toDataURL('image/jpeg', 0.75));
             };
             img.src = dataUrl;
@@ -513,27 +521,30 @@
 
     // --- LÓGICA DE VALIDACIÓN DEL BOTÓN ---
     function updateGenerateButtonState() {
-        const mainType = mainTypeSelect.value;
-        let isValid = false;
-        const validImagesCount = images.filter(img => img && img.dataUrl).length;
-
-        if (mainType === "simple") {
-            isValid = validImagesCount >= 1;
-        } else if (mainType === "complex") {
-            const requiredIndices = currentDocsConfig
-                .map((doc, i) => doc.optional ? -1 : i)
-                .filter(i => i !== -1);
-            
-            const allRequiredUploaded = requiredIndices.every(i => images[i] && images[i].dataUrl);
-            isValid = allRequiredUploaded;
-        }
-
-        generateBtn.disabled = !isValid;
+        const requiredIndices = currentDocsConfig
+            .map((doc, i) => doc.optional ? -1 : i)
+            .filter(i => i !== -1);
+        
+        const allRequiredUploaded = requiredIndices.every(i => images[i] && images[i].dataUrl);
+        generateBtn.disabled = !allRequiredUploaded;
     }
     
-    // --- GENERACIÓN PDF ---
+    // --- GENERACIÓN PDF CON MODAL DE AVISO ---
+    
     generateBtn.addEventListener("click", () => {
         if (!generateBtn.disabled) {
+            // MOSTRAR/OCULTAR ALERTAS SEGÚN EL TIPO DE TRÁMITE
+            const mainType = mainTypeSelect.value;
+            const essaludAlert = document.getElementById("alert-essalud");
+
+            if (mainType === "complex") {
+                // Si es subsidio, mostramos la alerta de EsSalud
+                essaludAlert.style.display = "block";
+            } else {
+                // Si es descanso médico, la ocultamos
+                essaludAlert.style.display = "none";
+            }
+
             pdfNoticeModal.classList.add("active");
         }
     });
@@ -567,7 +578,6 @@
                 doc.setTextColor(0, 71, 36);
                 doc.text(`${item.index + 1}. ${docName}`, margin, margin + 5);
 
-                // Como ya normalizamos al subir, aquí solo cargamos
                 const imgEl = await loadImage(item.dataUrl);
                 const availW = pWidth - (margin * 2);
                 const availH = pHeight - (margin * 2) - 15;
@@ -582,7 +592,7 @@
 
         } catch (e) {
             console.error(e);
-            alert("Error al generar PDF. Revise la consola para más detalles.");
+            alert("Error al generar PDF.");
         } finally {
             generateBtn.innerHTML = oldText;
             updateGenerateButtonState(); 
